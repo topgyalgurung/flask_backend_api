@@ -1,13 +1,14 @@
 
 from flask import Flask, render_template
+from config import API_KEY, BASE_URL
 import requests
+import os
 
 app = Flask(__name__) # set Flask app instance
     # __name__ help Flask locate resources
 
-api_key ='' # replace your actual api key
-headers = {'X-Auth-Token': api_key}
-url = "http://api.football-data.org/v4/matches"
+headers = {'X-Auth-Token': API_KEY}
+url = f"{BASE_URL}/matches"
 
 def fetch_scores():
     """
@@ -18,6 +19,7 @@ def fetch_scores():
         str: an error message if exception occurs
     """
     response = requests.get(url, headers=headers)
+
     try:
         data = response.json()
         if 'matches' in data and len(data['matches']) > 0:
