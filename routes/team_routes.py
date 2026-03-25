@@ -1,27 +1,11 @@
+from flask import Blueprint, request, jsonify
+from extensions import db
+from models.team import Team
 
-from flask import Flask, render_template
-from config import Config
-from extensions import db, migrate
+team_bp = Blueprint("team", __name__)
 
-from config import API_KEY, BASE_URL
-import requests
-import os
 
-# app = Flask(__name__) # set Flask app instance, __name__ help Flask locate resources
 
-def create_app():
-    app = Flask(__name__)
-    app.config.from_object(Config)
-
-    db.init_app(app)
-    migrate.init_app(app, db)
-
-    return app
-
-app = create_app()
-
-headers = {'X-Auth-Token': API_KEY}
-url = f"{BASE_URL}/matches"
 
 def fetch_scores():
     """
@@ -65,18 +49,24 @@ def load_scores_page():
     return render_template('scores.html')
 
 
-# create new Team
-new_team = Team(name="city", contact="city@gmail.com")
-db.session.add(new_team)
-db.session.commit()
+# @team_bp.route("/teams", methods=["POST"])
+# def create_team():
+#     data = request.json
+#     team = Team(name=data["name"], contact=data["contact"])
 
-# query for a team
-team = Team.query.filter_by(name='city').first()
+#     db.session.add(team)
+#     db.session.commit()
 
-#update a team
-team.contact = "new_name@gmail.com"
-db.session.commit()
+#     return jsonify({"message": "Team created"}), 201
 
-# debug provide detailed error message, server auto reload etc
-if __name__ == "__main__":
-    app.run(debug=True)
+    # create new Team
+    # new_team = Team(name="city", contact="city@gmail.com")
+    # db.session.add(new_team)
+    # db.session.commit()
+
+    # # query for a team
+    # team = Team.query.filter_by(name='city').first()
+
+    # #update a team
+    # team.contact = "new_name@gmail.com"
+    # db.session.commit()
